@@ -21,20 +21,13 @@ FASTLED_USING_NAMESPACE
 WiFiUDP Udp2;
 
 
-#define PORT_MASK 0b110111011111111000000110100  //0b1001111111000000111101
-#define NUM_STRIPS 16
-
-
 
 #define LED_WIDTH 123
-#define LED_HEIGHT_PER_STRIP 3
-#define LED_HEIGHT NUM_STRIPS*LED_HEIGHT_PER_STRIP
-#define NUM_LEDS NUM_STRIPS * NUM_LEDS_PER_STRIP
-#define NUM_LEDS_PER_STRIP LED_HEIGHT_PER_STRIP*LED_WIDTH
-;
+#define LED_HEIGHT 48
+#define NUM_LEDS LED_WIDTH*LED_HEIGHT
 
-CRGB leds[NUM_LEDS+1];
-CRGB Tpic[NUM_LEDS+1];
+CRGB leds[NUM_LEDS];
+CRGB Tpic[NUM_LEDS];
 
 char *artnetPacket2;
 
@@ -43,40 +36,7 @@ char *artnetPacket2;
 // Artnet settings
 //Artnet artnet;
 
-//this function is only used for me 'cause half of my strip are GRB instead of RGB
 
-void replaceled()
-{
-  int offset=0;
-  for(int i=0;i<123;i++)
- {
-   byte s=leds[i+offset].g;
-  // char buff[9];
-   // my_itoa (s,buff,16,8);
-    //Serial.println(buff);
-   leds[i+offset].g= leds[i+offset].r;
-   leds[i+offset].r= s;
-   //CRGB((s&0x0F000)>>8,(s&0x00FF0000)>>16 ,s & 0xFF) ;  //(leds[i+offset] & 0xFF) |  ( (leds[i+offset] & 0x00FF00L)<<8   ) |  (  (leds[i+offset] & 0xFF0000L)>>8  );
- }
- offset=24*LED_WIDTH;
-  for(int i=0;i<24*LED_WIDTH;i++)
- {
-   byte s=leds[i+offset].g;
-  // char buff[9];
-   // my_itoa (s,buff,16,8);
-    //Serial.println(buff);
-   leds[i+offset].g= leds[i+offset].r;
-   leds[i+offset].r= s; 
-   //CRGB((s&0x0F000)>>8,(s&0x00FF0000)>>16 ,s & 0xFF) ;  //(leds[i+offset] & 0xFF) |  ( (leds[i+offset] & 0x00FF00L)<<8   ) |  (  (leds[i+offset] & 0xFF0000L)>>8  );
- }
- //on met les boards en noir
-
- for (int i=0;i<LED_HEIGHT;i++)
- {
-  leds[i*LED_WIDTH]=CRGB::Black;
-  leds[(i+1)*LED_WIDTH-1]=CRGB::Black;
- }
-}
 
 
 CRGB artnetled[32*32];
@@ -157,7 +117,8 @@ void setup() {
  
   xTaskCreatePinnedToCore(FastLEDshowTask2, "FastLEDshowTask2", 1000, NULL,3, &FastLEDshowTaskHandle2, FASTLED_SHOW_CORE);
  
-  FastLED.addLeds<WS2811_PORTA,NUM_STRIPS,PORT_MASK>(leds, NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, 12>(leds, 0, NUM_LEDS);
+ //or your way of calling the led
  
   FastLED.setBrightness(64);
 
@@ -169,9 +130,9 @@ void setup() {
 
 
  WiFi.mode(WIFI_STA);
-    Serial.printf("Connecting to %s\n", "WiFi-2.4-E19C");
+    Serial.printf("Connecting to %s\n", "");
     Serial.printf("Connecting ");
-    WiFi.begin("WiFi-2.4-E19C", "yvesyves");
+    WiFi.begin("xxxxx", "xxxx");
 //WiFi.begin("DomainePutterie", "Jeremyyves");
     while (WiFi.status() != WL_CONNECTED) {
       Serial.println(WiFi.status());
