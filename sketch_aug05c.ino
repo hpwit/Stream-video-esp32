@@ -86,7 +86,7 @@ void FastLEDshowTask2(void *pvParameters)
            
                 memcpy(leds,Tpic,LED_WIDTH*LED_HEIGHT*sizeof(CRGB));
             
-            replaceled();
+           
             FastLED.show();
             
                userTaskHandle=0; //so we can't have two display tasks at the same time
